@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkbox Selection</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+  .checkbox-container {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="checkbox-container">
+  <input type="checkbox" id="selectLegAll" value="ALL"> <label for="selectLegAll">ALL</label><br>
+  <input type="checkbox" id="selectLeg1" class="optionCheckbox" value="1"> <label for="checkbox-1">1</label><br>
+  <input type="checkbox" id="selectLeg2" class="optionCheckbox" value="2"> <label for="checkbox-2">2</label><br>
+  <input type="checkbox" id="selectLeg3" class="optionCheckbox" value="3"> <label for="checkbox-3">3</label><br>
+  <input type="checkbox" id="selectLeg4" class="optionCheckbox" value="4"> <label for="checkbox-4">4</label><br>
+  <input type="checkbox" id="selectLeg5" class="optionCheckbox" value="5"> <label for="checkbox-5">5</label><br>
+</div>
+
+<input type="text" id="getSelLegCount" placeholder="Selected Values">
+
+<script>
+    var tabNumber= 1;
+$(document).ready(function(){
+  // Check/Uncheck ALL checkbox
+  $('#selectLegAll').change(function(){
+    if ($(this).prop('checked')) {
+      $('.optionCheckbox').prop('checked', true);
+    } else {
+      $('.optionCheckbox').prop('checked', false);
+    }
+    updateSelectedValues();
+  });
+  
+  // Check/Uncheck ALL checkbox if any of the individual checkboxes are changed
+  $('.optionCheckbox').change(function(){
+    if($('.optionCheckbox:checked').length === $('.optionCheckbox').length) {
+      $('#selectLegAll').prop('checked', true);
+    } else {
+      $('#selectLegAll').prop('checked', false);
+    }
+    updateSelectedValues();
+  });
+  
+  // Update selected values in the input box
+  function updateSelectedValues() {
+    var selectedValues = [];
+    $('.optionCheckbox:checked').each(function(){
+      selectedValues.push($(this).val());
+    });
+    console.log("hello==>",selectedValues)
+    console.log("!selectedValues.includes('ALL')==>",!selectedValues.includes('ALL'))
+    if(selectedValues.length == 5 && !selectedValues.includes('ALL')){
+        $('#getSelLegCount').val('ALL');
+    }else{
+        $('#getSelLegCount').val(selectedValues.join(', '));
+    }
+    
+  }
+});
+</script>
+
+</body>
+</html>
