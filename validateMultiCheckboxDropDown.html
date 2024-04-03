@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkbox Selection</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+  <div class="iAgentProfileSelectWrapper" id="selectLegNo">
+    <label id="labelForLegCount" for="getSelLegCount" style="position: relative;left: 0px;">
+      <span class="iAgentProfileSelectArrow" style="left: 190px;"></span>
+    </label>
+
+    <input type="text" id="getSelLegCount" class="RoundedInput" value="" name="numberOfAdults"
+      onclick="selectedLegsMultiCity(id)" />
+    <div id="mainDivOfSelectLegNo" style="position: relative;display: none;">
+      <input type="checkbox" id="option1Leg" class="option1" value="1" /><label for="option1Leg">1</label>
+      <br>
+      <input type="checkbox" id="option2Leg" class="option2" value="2" /><label for="option2Leg">2</label>
+      <br>
+      <input type="checkbox" id="option3Leg" class="option3" value="3" /><label for="option3Leg">3</label>
+      <br>
+      <input type="checkbox" id="option4Leg" class="option4" value="4" /><label for="option4Leg">4</label>
+      <br>
+      <input type="checkbox" id="option5Leg" class="option5" value="5" /><label for="option5Leg">5</label>
+      <br>
+      <input type="checkbox" id="optionAllLeg" class="optionAll" value="ALL" /><label for="optionAllLeg">ALL</label>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheMainDivOfSelectLegNo(idOfCheckboxes) {
+      $(idOfCheckboxes).toggle();
+    }
+
+    function selectedLegsMultiCity(id, tabNumber) {
+      var tabNumber = tabNumber;
+      console.log('tabNumber===========>', tabNumber);
+      var input1 = document.getElementById(id);
+
+      var divOfInputs = input1.parentElement.children[2];
+
+      var selectAllCheckbox = divOfInputs.querySelector(".optionAll");
+
+      var checkboxes = divOfInputs.parentElement.children[2].getElementsByTagName("input");
+
+      var checkboxesLength = divOfInputs.parentElement.children[2].getElementsByTagName("input").length;
+
+      var idOfCheckboxes = document.getElementById(id).nextElementSibling;
+
+      toggleTheMainDivOfSelectLegNo(idOfCheckboxes);
+
+      document.addEventListener('click', function (event) {
+        var container = $('#mainDivOfSelectLegNo' + tabNumber);
+        var excludeElement = $('#getSelLegCount' + tabNumber);
+
+        // Check if the clicked element is not the input1 element and is not contained within the container or excludeElement
+        if (event.target !== input1 && !container.is(event.target) && container.has(event.target).length === 0 && !excludeElement.is(event.target)) {
+          container.hide();
+        }
+      });
+      // Loop through all checkboxes
+      function updateInput() {
+        var selectedValues = [];
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].checked) {
+            selectedValues.push(checkboxes[i].value);
+          }
+        }
+        if (selectedValues.length === checkboxes.length) {
+           input1.value = "All";
+           divOfInputs.style.display = "none";
+
+        } else if (selectedValues.length === 0) {
+          input1.value = "";
+        } else {
+          input1.value = selectedValues.join(", ");
+        }
+      }
+      //for handling the All method on the selected dropdown list
+      function selectAll() {
+        var isChecked = selectAllCheckbox.checked;
+        for (let i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = isChecked;
+          divOfInputs.style.display = "none"
+        }
+        updateInput();
+
+        if (isChecked) {
+            divOfInputs.style.display = "none";
+        } else {
+            divOfInputs.style.display = "block"; // or "inline-block" based on your styling
+        }
+      }
+
+      function handleCheckboxClick(event) {
+        if (event.target.value !== "ALL") {
+          var allChecked = true;
+          for (let i = 0; i < checkboxes.length; i++) {
+            if (!checkboxes[i].checked && checkboxes[i].value !== "ALL") {
+              allChecked = false;
+              break;
+            }
+          }
+          selectAllCheckbox.checked = allChecked;
+        } else {
+          for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = event.target.checked;
+          }
+        }
+        updateInput();
+      }
+
+
+      $(selectAllCheckbox).change(function () {
+        selectAll();
+      });
+      //for addEventListener to the all input of related dropdown component
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("change", handleCheckboxClick);
+      }
+    }
+  </script>
+
+</body>
+
+</html>
